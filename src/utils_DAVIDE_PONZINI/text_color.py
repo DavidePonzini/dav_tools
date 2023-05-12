@@ -1,12 +1,19 @@
-import subprocess
+import subprocess as _subprocess
+import sys as _sys
 
 
 class _Util:
     def get_color_code(command: str) -> bytes:
         try:
-            return subprocess.check_output(command.split())
-        except subprocess.CalledProcessError:
+            return _subprocess.check_output(command.split())
+        except _subprocess.CalledProcessError:
             return b''
+        
+    def get_term_len() -> int:
+        try:
+            return int(_subprocess.check_output('tput cols'.split()))
+        except _subprocess.CalledProcessError | ValueError:
+            return 0
 
 
 class TextFormatOption:
@@ -52,9 +59,9 @@ def get_format(*options):
 
     return result
 
-def set_format(*options):
+def set_format(*options, file=_sys.stdout):
     for option in options:
-        print(option.decode(), end='')
+        print(option.decode(), end='', file=file)
 
 def get_colored_text(text: str, *format_options):
     result = ''
@@ -64,7 +71,7 @@ def get_colored_text(text: str, *format_options):
 
     return result
 
-def print_colored_text(text: str, *format_options, end: str='\n', file=None):
+def print_colored_text(text: str, *format_options, end: str='\n', file=_sys.stdout):
     text = get_colored_text(text, *format_options)
     print(text, end=end, file=file)
 
@@ -74,3 +81,6 @@ def input_colored(*format_options, text: str=''):
     set_format(TextFormatOption.RESET)
 
     return result
+
+def clear_line(file=_sys.stdout):
+    print(' ' * _Util.get_term_len(), end='\r', file=file)
