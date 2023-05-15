@@ -1,4 +1,4 @@
-NAME=utils-DAVIDE-PONZINI
+NAME=dav-utils-DAVIDE-PONZINI
 
 build:
 	rm -rf dist/
@@ -16,5 +16,5 @@ download-test: uninstall
 	python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps $(NAME)
 
 uninstall:
-	python3 -m pip uninstall $(NAME)
+	python3 -m pip uninstall -y $(NAME)
 	

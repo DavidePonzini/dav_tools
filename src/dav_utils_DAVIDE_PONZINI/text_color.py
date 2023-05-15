@@ -1,19 +1,14 @@
-import subprocess as _subprocess
 import sys as _sys
-
+from . import commands as _commands
 
 class _Util:
-    def get_color_code(command: str) -> bytes:
-        try:
-            return _subprocess.check_output(command.split())
-        except _subprocess.CalledProcessError:
-            return b''
+    def get_color_code(command_linux: str) -> bytes:
+        return _commands.execute(command_linux, None, bytes,
+                                 fail_on_os_error=False, fail_on_command_error=False, default_value=bytes())
         
     def get_term_len() -> int:
-        try:
-            return int(_subprocess.check_output('tput cols'.split()))
-        except _subprocess.CalledProcessError | ValueError:
-            return 0
+        return _commands.execute('tput cols', None, int,
+                                 fail_on_os_error=False, fail_on_command_error=False, default_value=0)
 
 
 class TextFormatOption:
@@ -83,4 +78,5 @@ def input_colored(*format_options, text: str=''):
     return result
 
 def clear_line(file=_sys.stdout):
-    print(' ' * _Util.get_term_len(), end='\r', file=file)
+    print('\r', ' ' * _Util.get_term_len(), '\r',
+          sep='', file=file)
