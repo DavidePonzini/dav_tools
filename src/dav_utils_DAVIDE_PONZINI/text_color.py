@@ -79,4 +79,4 @@ def input_colored(*format_options, text: str=''):
 
 def clear_line(file=_sys.stdout):
     print('\r', ' ' * _Util.get_term_len(), '\r',
-          sep='', file=file)
+          sep='', end='', file=file)

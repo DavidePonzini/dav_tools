@@ -32,6 +32,16 @@ def info(text: str, blink=False) -> None:
                  TextFormatOption.Color.BLUE
              ], 
              blink=blink)
+    
+# messages indicating an action which is still happening
+def progress(text: str) -> None:
+    message(text,
+            icon=' ',
+            end='\r',
+            text_options=[
+                TextFormatOption.Color.DARKGRAY,
+                TextFormatOption.Style.ITALIC
+            ])
 
 # message indicating an error
 def error(text: str, blink=False) -> None:
