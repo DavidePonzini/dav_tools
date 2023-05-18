@@ -7,7 +7,7 @@ from .text_color import clear_line as _clear_line
 
 
 # generic and customizable message
-def message(text, icon=None, text_options=[], icon_options=[], blink=False, end='\n', file=_sys.stderr):
+def message(text: str | object, icon=None, text_options=[], icon_options=[], blink=False, end='\n', file=_sys.stderr):
     _clear_line()
 
     if icon is not None:
@@ -21,7 +21,7 @@ def message(text, icon=None, text_options=[], icon_options=[], blink=False, end=
         _print_colored_text(']', *icon_options, TextFormatOption.Style.BOLD, end='', file=file)
         _print_colored_text(' ', end='', file=file)
     
-    _print_colored_text(text, *text_options, end=end, file=file)
+    _print_colored_text(str(text), *text_options, end=end, file=file)
     
 
 # message indicating an information
@@ -75,6 +75,9 @@ def warning(text: str, blink=False) -> None:
              blink=blink,
              icon_options=[
                  TextFormatOption.Color.YELLOW
+             ],
+             text_options=[
+                 TextFormatOption.Color.YELLOW
              ]
     )
 
@@ -84,6 +87,9 @@ def success(text: str, blink=False) -> None:
              icon='+', 
              blink=blink,
              icon_options=[
+                 TextFormatOption.Color.GREEN
+             ],
+             text_options=[
                  TextFormatOption.Color.GREEN
              ]
     )

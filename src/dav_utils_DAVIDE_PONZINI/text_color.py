@@ -3,12 +3,10 @@ from . import commands as _commands
 
 class _Util:
     def get_color_code(command_linux: str) -> bytes:
-        return _commands.execute(command_linux, None, bytes,
-                                 fail_on_os_error=False, fail_on_command_error=False, default_value=bytes())
+        return _commands.get_output(command_linux, None, bytes, on_error=lambda: bytes())
         
     def get_term_len() -> int:
-        return _commands.execute('tput cols', None, int,
-                                 fail_on_os_error=False, fail_on_command_error=False, default_value=0)
+        return _commands.get_output('tput cols', None, int, on_error=lambda: 0)
 
 
 class TextFormatOption:
@@ -70,9 +68,9 @@ def print_colored_text(text: str, *format_options, end: str='\n', file=_sys.stdo
     text = get_colored_text(text, *format_options)
     print(text, end=end, file=file)
 
-def input_colored(*format_options, text: str=''):
-    set_format(*format_options)
-    result = input(text)
+def input_colored(*format_options):
+    set_format(*format_options, file=_sys.stderr)
+    result = input()
     set_format(TextFormatOption.RESET)
 
     return result
