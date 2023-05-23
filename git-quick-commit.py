@@ -14,10 +14,14 @@ if commands.get_output('git status --porcelain') == b'':
 if argument_parser.args.message is not None:
     commit_message = argument_parser.args.message
 else:
-    commit_message = messages.ask('Reason')
-    if len(commit_message) == 0:
-        commit_message = f'Quick commit ({date.today()})'
-        messages.warning(f'Using default commit message: "{commit_message}"')
+    try:
+        commit_message = messages.ask('Reason')
+        if len(commit_message) == 0:
+            commit_message = f'Quick commit ({date.today()})'
+            messages.warning(f'Using default commit message: "{commit_message}"')
+    except KeyboardInterrupt:
+        messages.warning('Aborted')
+        sys.exit(1)
 
 commands.execute('git add .')
 messages.success('Stages changes')
@@ -26,5 +30,5 @@ commands.execute(f'git commit --quiet -m "{commit_message}"')
 messages.success('Committed changes')
 
 messages.progress('Uploading commit...')
-commands.execute(f'git push origin master --quiet')
+commands.execute(f'git push --quiet')
 messages.success('Uploaded commit')
