@@ -1,6 +1,6 @@
 import sys as _sys
 
-from .text_color import TextFormatOption
+from .text_color import TextFormat
 from .text_color import print_colored_text as _print_colored_text
 from .text_color import input_colored as _input_colored
 from .text_color import clear_line as _clear_line
@@ -11,14 +11,14 @@ def message(text: str | object, icon=None, text_options=[], icon_options=[], bli
     _clear_line()
 
     if icon is not None:
-        _print_colored_text('[', *icon_options, TextFormatOption.Style.BOLD, end='', file=file)
+        _print_colored_text('[', *icon_options, TextFormat.Style.BOLD, end='', file=file)
         
         if blink:
-            _print_colored_text(icon, *icon_options, TextFormatOption.Style.BOLD, TextFormatOption.Style.BLINK, end='', file=file)
+            _print_colored_text(icon, *icon_options, TextFormat.Style.BOLD, TextFormat.Style.BLINK, end='', file=file)
         else:
-            _print_colored_text(icon, *icon_options, TextFormatOption.Style.BOLD, end='', file=file)
+            _print_colored_text(icon, *icon_options, TextFormat.Style.BOLD, end='', file=file)
         
-        _print_colored_text(']', *icon_options, TextFormatOption.Style.BOLD, end='', file=file)
+        _print_colored_text(']', *icon_options, TextFormat.Style.BOLD, end='', file=file)
         _print_colored_text(' ', end='', file=file)
     
     _print_colored_text(str(text), *text_options, end=end, file=file)
@@ -29,7 +29,7 @@ def info(text: str, blink=False) -> None:
     message(text,
              icon='*',
              icon_options=[
-                 TextFormatOption.Color.BLUE
+                 TextFormat.Color.BLUE
              ], 
              blink=blink)
     
@@ -39,8 +39,8 @@ def progress(text: str) -> None:
             icon=' ',
             end='\r',
             text_options=[
-                TextFormatOption.Color.DARKGRAY,
-                TextFormatOption.Style.ITALIC
+                TextFormat.Color.DARKGRAY,
+                TextFormat.Style.ITALIC
             ])
 
 # message indicating an error
@@ -49,7 +49,10 @@ def error(text: str, blink=False) -> None:
              icon='-', 
              blink=blink,
              icon_options=[
-                 TextFormatOption.Color.RED
+                 TextFormat.Color.RED
+             ],
+             text_options=[
+                 TextFormat.Color.RED
              ]
     )
 
@@ -59,10 +62,10 @@ def critical_error(text: str, blink=False, exit_code=1) -> None:
              icon='x', 
              blink=blink,
              icon_options=[
-                 TextFormatOption.Color.RED
+                 TextFormat.Color.RED
              ],
              text_options=[
-                 TextFormatOption.Color.RED
+                 TextFormat.Color.RED
              ]
     )
 
@@ -74,10 +77,10 @@ def warning(text: str, blink=False) -> None:
              icon='!', 
              blink=blink,
              icon_options=[
-                 TextFormatOption.Color.YELLOW
+                 TextFormat.Color.YELLOW
              ],
              text_options=[
-                 TextFormatOption.Color.YELLOW
+                 TextFormat.Color.YELLOW
              ]
     )
 
@@ -87,10 +90,10 @@ def success(text: str, blink=False) -> None:
              icon='+', 
              blink=blink,
              icon_options=[
-                 TextFormatOption.Color.GREEN
+                 TextFormat.Color.GREEN
              ],
              text_options=[
-                 TextFormatOption.Color.GREEN
+                 TextFormat.Color.GREEN
              ]
     )
 
@@ -99,12 +102,12 @@ def ask(question: str, end=': ') -> str:
     message(f'{question}{end}',
              icon='?',
              icon_options=[
-                 TextFormatOption.Color.BLUE
+                 TextFormat.Color.BLUE
              ],
              end='')
     
     return _input_colored(
-        TextFormatOption.Style.ITALIC,
+        TextFormat.Style.ITALIC,
     )
 
 # prints a question asking the user if they want to continue executing the program

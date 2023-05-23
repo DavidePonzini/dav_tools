@@ -17,7 +17,7 @@ class ArgumentParser:
     def __init__(self) -> None:
         self.parser = argparse.ArgumentParser(
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            epilog = text_color.get_colored_text('--Developed by Davide Ponzini (davide.ponzini95@gmail.com)', text_color.TextFormatOption.Style.ITALIC)
+            epilog = text_color.get_colored_text('--Developed by Davide Ponzini (davide.ponzini95@gmail.com)', text_color.TextFormat.Style.ITALIC)
         )
 
         self.__groups = {}
@@ -41,7 +41,7 @@ class ArgumentParser:
         if description is None:
             group = self.parser.add_argument_group(name)
         else:
-            group = self.parser.add_argument_group(name, text_color.get_colored_text(description, text_color.TextFormatOption.Style.ITALIC))
+            group = self.parser.add_argument_group(name, text_color.get_colored_text(description, text_color.TextFormat.Style.ITALIC))
 
         self.__groups[name] = group
         return group
