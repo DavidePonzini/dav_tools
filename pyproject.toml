@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "dav_utils_DAVIDE_PONZINI"
-version = "0.0.3"
+name = "dav_tools"
+version = "0.0.1"
 authors = [
   { name="Davide Ponzini", email="davide.ponzini95@gmail.com" },
 ]
