@@ -7,7 +7,7 @@ argument_parser.set_description('Quickly commits and uploads all changes perform
 argument_parser.add_argument('-m', '--message', help='commit message', default=None)
 
 
-if commands.get_output('git status --porcelain', return_type=str) == '':
+if commands.get_output('git status --porcelain') == b'':
     messages.success('Nothing to commit')
     sys.exit(0)
 
