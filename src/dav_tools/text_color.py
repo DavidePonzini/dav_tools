@@ -1,6 +1,5 @@
 import sys as _sys
 import os as _os
-from . import commands as _commands
 from ._text_format import TextFormat
 
 
@@ -36,5 +35,5 @@ def input_colored(*format_options):
     return result
 
 def clear_line(file=_sys.stdout, flush=False):
-    print('\r', ' ' * _os.get_terminal_size(), '\r',
+    print('\r', ' ' * _os.get_terminal_size().columns, '\r',
           sep='', end='', file=file, flush=flush)
