@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dav_tools"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Davide Ponzini", email="davide.ponzini95@gmail.com" },
 ]
-description = "Various utilies to aid in program developent"
+description = "Various utilies to aid in program development"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
