@@ -23,7 +23,7 @@ def get_colored_text(text: str, *format_options):
 
     return result
 
-def print_colored_text(text: str, *format_options, end: str='\n', file=_sys.stdout, flush=False):
+def print_colored_text(text: str = '', *format_options, end: str='\n', file=_sys.stdout, flush=False):
     text = get_colored_text(text, *format_options)
     print(text, end=end, file=file, flush=flush)
 

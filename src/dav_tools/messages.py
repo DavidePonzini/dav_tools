@@ -21,9 +21,13 @@ def message(*text: str | object, icon=None, text_options=[[]], icon_options=[], 
         _print_colored_text(']', *icon_options, TextFormat.Style.BOLD, end='', file=file)
         _print_colored_text(' ', end='', file=file)
     
-    for t,o in zip(text, text_options):
-        _print_colored_text(str(t), *o, end=' ', file=file, flush=True)
-    print(end=end)
+    for i in range(len(text)):
+        t = str(text[i])
+        o = text_options[i] if i < len(text_options) else []
+        e = ' ' if i < len(text) - 1 else ''
+        _print_colored_text(t, *o, end=e, file=file)
+        
+    _print_colored_text(end=end, file=file, flush=True)
     
 # message indicating an information
 def info(*text: str | object, text_options=[[]], blink=False) -> None:
