@@ -16,9 +16,8 @@ class ArgumentAction:
 class ArgumentParser:
     def __init__(self) -> None:
         self.parser = argparse.ArgumentParser(
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            epilog = text_color.get_colored_text('--Developed by Davide Ponzini (davide.ponzini95@gmail.com)', text_color.TextFormat.Style.ITALIC)
-        )
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter
+            )
 
         self.__groups = {}
 
@@ -28,6 +27,9 @@ class ArgumentParser:
 
     def set_description(self, description) -> None:
         self.parser.description = description
+
+    def set_developer_info(self, name, email):
+        self.parser.epilog = text_color.get_colored_text(f'--Developed by {name} ({email})', text_color.TextFormat.Style.ITALIC)
 
     @property
     def args(self) -> argparse.Namespace:

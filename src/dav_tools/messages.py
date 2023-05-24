@@ -7,7 +7,7 @@ from .text_color import clear_line as _clear_line
 
 
 # generic and customizable message
-def message(text: str | object, icon=None, text_options=[], icon_options=[], blink=False, end='\n', file=_sys.stderr):
+def message(*text: str | object, icon=None, text_options=[[]], icon_options=[], blink=False, end='\n', file=_sys.stderr):
     _clear_line()
 
     if icon is not None:
@@ -21,27 +21,29 @@ def message(text: str | object, icon=None, text_options=[], icon_options=[], bli
         _print_colored_text(']', *icon_options, TextFormat.Style.BOLD, end='', file=file)
         _print_colored_text(' ', end='', file=file)
     
-    _print_colored_text(str(text), *text_options, end=end, file=file, flush=True)
+    for t,o in zip(text, text_options):
+        _print_colored_text(str(t), *o, end=' ', file=file, flush=True)
+    print(end=end)
     
-
 # message indicating an information
-def info(text: str, blink=False) -> None:
-    message(text,
+def info(*text: str | object, text_options=[[]], blink=False) -> None:
+    message(*text,
              icon='*',
              icon_options=[
                  TextFormat.Color.BLUE
-             ], 
+             ],
+             text_options=text_options,
              blink=blink)
-    
+
 # messages indicating an action which is still happening
 def progress(text: str) -> None:
     message(text,
             icon=' ',
             end='\r',
-            text_options=[
+            text_options=[[
                 TextFormat.Color.DARKGRAY,
                 TextFormat.Style.ITALIC
-            ])
+            ]])
 
 # message indicating an error
 def error(text: str, blink=False) -> None:
@@ -51,9 +53,9 @@ def error(text: str, blink=False) -> None:
              icon_options=[
                  TextFormat.Color.RED
              ],
-             text_options=[
+             text_options=[[
                  TextFormat.Color.RED
-             ]
+             ]]
     )
 
 # message indicating a critical error. The program terminates after showing this message
@@ -64,9 +66,9 @@ def critical_error(text: str, blink=False, exit_code=1) -> None:
              icon_options=[
                  TextFormat.Color.RED
              ],
-             text_options=[
+             text_options=[[
                  TextFormat.Color.RED
-             ]
+             ]]
     )
 
     _sys.exit(exit_code)
@@ -79,9 +81,9 @@ def warning(text: str, blink=False) -> None:
              icon_options=[
                  TextFormat.Color.YELLOW
              ],
-             text_options=[
+             text_options=[[
                  TextFormat.Color.YELLOW
-             ]
+             ]]
     )
 
 # message indicating a successfully completed action
@@ -92,9 +94,9 @@ def success(text: str, blink=False) -> None:
              icon_options=[
                  TextFormat.Color.GREEN
              ],
-             text_options=[
+             text_options=[[
                  TextFormat.Color.GREEN
-             ]
+             ]]
     )
 
 # prints a question and returns the answer
