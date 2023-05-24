@@ -21,7 +21,7 @@ def message(text: str | object, icon=None, text_options=[], icon_options=[], bli
         _print_colored_text(']', *icon_options, TextFormat.Style.BOLD, end='', file=file)
         _print_colored_text(' ', end='', file=file)
     
-    _print_colored_text(str(text), *text_options, end=end, file=file)
+    _print_colored_text(str(text), *text_options, end=end, file=file, flush=True)
     
 
 # message indicating an information
@@ -102,7 +102,7 @@ def ask(question: str, end=': ') -> str:
     message(f'{question}{end}',
              icon='?',
              icon_options=[
-                 TextFormat.Color.BLUE
+                 TextFormat.Color.PURPLE
              ],
              end='')
     

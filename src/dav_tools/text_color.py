@@ -23,9 +23,9 @@ def get_colored_text(text: str, *format_options):
 
     return result
 
-def print_colored_text(text: str, *format_options, end: str='\n', file=_sys.stdout):
+def print_colored_text(text: str, *format_options, end: str='\n', file=_sys.stdout, flush=False):
     text = get_colored_text(text, *format_options)
-    print(text, end=end, file=file)
+    print(text, end=end, file=file, flush=flush)
 
 def input_colored(*format_options):
     set_format(*format_options, file=_sys.stderr)
@@ -34,6 +34,6 @@ def input_colored(*format_options):
 
     return result
 
-def clear_line(file=_sys.stdout):
+def clear_line(file=_sys.stdout, flush=False):
     print('\r', ' ' * TextFormat.get_term_len(), '\r',
-          sep='', end='', file=file)
+          sep='', end='', file=file, flush=flush)
