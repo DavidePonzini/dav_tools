@@ -6,7 +6,7 @@ install: uninstall build
 
 build:
 	python3 -m pip install pipreqs
-	pipreqs --force --mode no-pin
+	pipreqs --force
 	sudo python3 -m pip install --upgrade -r requirements.txt
 	sudo rm -rf dist/
 	python3 -m pip install build
