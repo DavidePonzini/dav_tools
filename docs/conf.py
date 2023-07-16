@@ -15,9 +15,9 @@ author = 'Davide Ponzini'
 
 extensions = [
     'sphinx.ext.autodoc',
-    # 'autoapi.extension',
+    'autoapi.extension',
     # 'sphinx.ext.inheritance_diagram',
-    'autoapi.sphinx',
+    # 'autoapi.sphinx',
 ]
 
 templates_path = ['_templates']
