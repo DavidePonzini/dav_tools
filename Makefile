@@ -15,9 +15,13 @@ build:
 uninstall:
 	sudo python3 -m pip uninstall -y $(NAME)
 
+### Documentation ###
+documentation:
+	make html -C docs/
+
 
 ### PyPi ###
-upload: build
+upload: build documentation
 	python3 -m pip install --upgrade twine
 	python3 -m twine upload --verbose dist/*
 

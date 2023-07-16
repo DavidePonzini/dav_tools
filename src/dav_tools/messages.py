@@ -1,3 +1,5 @@
+'''Print messages on screen and ask for user input.'''
+
 import sys as _sys
 
 from .text_color import TextFormat
@@ -6,8 +8,24 @@ from .text_color import input_colored as _input_colored
 from .text_color import clear_line as _clear_line
 
 
-# generic and customizable message
-def message(*text: str | object, text_min_len: list[int] = [], default_text_options=[], additional_text_options=[[]], icon=None, icon_options=[], blink=False, end='\n', file=_sys.stderr):
+def message(*text: str | object,
+            text_min_len: list[int] = [], default_text_options: list = [], additional_text_options: list[list] = [[]],
+            icon: str = None, icon_options: list = [], blink: bool = False,
+            end: str = '\n', file = _sys.stderr):
+    '''
+    Generic and customizable message.
+
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param default_text_options: Styling options applied to all messages.
+    :param additional_text_options: Styling options applied to single messages.
+    :param icon: Character to use as icon, between ``[ ]``.
+    :param icon_options: Styling options applied to the icon.
+    :param blink: If True, the icon blinks.
+    :param end: Character to output at the end of the message.
+    :param file: Where to write the message.
+    '''
+
     _clear_line()
 
     # icon
@@ -40,8 +58,17 @@ def message(*text: str | object, text_min_len: list[int] = [], default_text_opti
     # line end and flushing
     _print_colored_text(end=end, file=file, flush=True)
     
-# message indicating an information
-def info(*text: str | object, text_min_len: list[int] = [], text_options=[[]], blink=False) -> None:
+
+def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+    '''
+    Message indicating an information.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    :param blink: If True, the icon blinks.
+    '''
+
     message(*text,
             icon='*',
             icon_options=[
@@ -51,8 +78,16 @@ def info(*text: str | object, text_min_len: list[int] = [], text_options=[[]], b
             additional_text_options=text_options,
             blink=blink)
 
-# messages indicating an action which is still happening
-def progress(*text: str | object, text_min_len: list[int] = [], text_options=[[]]) -> None:
+
+def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+    '''
+    Message indicating an action which is still happening.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    '''
+
     message(*text,
             icon=' ',
             end='\r',
@@ -64,8 +99,17 @@ def progress(*text: str | object, text_min_len: list[int] = [], text_options=[[]
             additional_text_options=text_options
     )
 
-# message indicating an error
-def error(*text: str | object, text_min_len: list[int] = [], text_options=[[]], blink=False) -> None:
+
+def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+    '''
+    Message indicating an error.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    :param blink: If True, the icon blinks.
+    '''
+    
     message(*text, 
             icon='-', 
             blink=blink,
@@ -79,8 +123,17 @@ def error(*text: str | object, text_min_len: list[int] = [], text_options=[[]], 
             additional_text_options=text_options
     )
 
-# message indicating a critical error. The program terminates after showing this message
-def critical_error(*text: str | object, text_min_len: list[int] = [], blink=False, exit_code=1) -> None:
+
+def critical_error(*text: str | object, text_min_len: list[int] = [], blink: bool = False, exit_code: int = 1):
+    '''
+    Message indicating a critical error. The program terminates after showing this message.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param blink: If True, the icon blinks.
+    :param exit_code: The exit code of the program.
+    '''
+    
     message(*text, 
             icon='x', 
             blink=blink,
@@ -95,8 +148,17 @@ def critical_error(*text: str | object, text_min_len: list[int] = [], blink=Fals
 
     _sys.exit(exit_code)
 
-# message indicating a warning
-def warning(*text: str | object, text_min_len: list[int] = [], text_options=[[]], blink=False) -> None:
+
+def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+    '''
+    Message indicating a warning.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    :param blink: If True, the icon blinks.
+    '''
+
     message(*text, 
             icon='!', 
             blink=blink,
@@ -109,8 +171,17 @@ def warning(*text: str | object, text_min_len: list[int] = [], text_options=[[]]
             ]
     )
 
-# message indicating a successfully completed action
-def success(*text: str | object, text_min_len: list[int] = [], text_options=[[]], blink=False) -> None:
+
+def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+    '''
+    Message indicating a successfully completed action.
+    
+    :param text: The message(s) to print.
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    :param blink: If True, the icon blinks.
+    '''
+
     message(*text, 
             icon='+', 
             blink=blink,
@@ -122,8 +193,17 @@ def success(*text: str | object, text_min_len: list[int] = [], text_options=[[]]
             additional_text_options=text_options
     )
 
-# prints a question and returns the answer
+
 def ask(question: str, end=': ') -> str:
+    '''
+    Prints a question to screen and returns the answer.
+    
+    :param question: The question to print.
+    :param end: Characters to be printed at the end of the question.
+    
+    :returns: The user's answer.
+    '''
+
     message(f'{question}{end}',
             icon='?',
             icon_options=[
@@ -135,11 +215,15 @@ def ask(question: str, end=': ') -> str:
         TextFormat.Style.ITALIC,
     )
 
-# prints a question asking the user if they want to continue executing the program
-# 	a positive answer makes the program continues its normal execution
-# 	a negative answer terminates the program
-# optionally supports a custom question
 def ask_continue(text: str=None):
+    '''
+    Prints a question asking the user if they want to continue executing the program:
+    a positive answer makes the program continues its normal execution;
+    a negative answer terminates the program.
+    Optionally supports a custom message.
+    
+    :param text: The message to print.
+    '''
     if text is not None:
         message = f'{text}. Continue? (y/N)'
     else:
