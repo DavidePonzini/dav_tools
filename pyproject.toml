@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dav_tools"
-version = "0.0.10"
+version = "0.1.0"
 authors = [
   { name="Davide Ponzini", email="davide.ponzini95@gmail.com" },
 ]
@@ -22,5 +22,6 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/DavidePonzini/dav-utils"
+"Repository" = "https://github.com/DavidePonzini/dav-utils"
+"Documentation" = "https://dav-tools.readthedocs.io/en/latest/index.html"
 "Bug Tracker" = "https://github.com/DavidePonzini/dav-utils/issues"
