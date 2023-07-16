@@ -13,7 +13,12 @@ author = 'Davide Ponzini'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'autoapi.extension']
+extensions = [
+    'sphinx.ext.autodoc',
+    # 'autoapi.extension',
+    # 'sphinx.ext.inheritance_diagram',
+    'autoapi.sphinx',
+]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
@@ -30,5 +35,4 @@ html_static_path = ['_static']
 # -- Autoapi -----------------------------------------------------------------
 autoapi_dirs = ['../src']
 autodoc_typehints = 'description'
-
 autoapi_options = [ 'members', 'private-members', 'show-inheritance', 'show-module-summary', 'special-members', 'imported-members', ]
