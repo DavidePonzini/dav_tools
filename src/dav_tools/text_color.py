@@ -86,5 +86,12 @@ def clear_line(file=_sys.stdout, flush=False):
     :param file: Stream to clear.
     :param flush: Whether to flush the stream after printing.
     '''
-    print('\r', ' ' * _os.get_terminal_size().columns, '\r',
-          sep='', end='', file=file, flush=flush)
+    
+    try:
+        size = _os.get_terminal_size().columns
+        print('\r', ' ' * size, '\r',
+              sep='', end='', file=file, flush=flush)
+    except OSError:
+        pass    # Do nothing
+
+    

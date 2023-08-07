@@ -9,7 +9,8 @@ class TextFormat:
         UNDERLINE_CURLY     = b'\x1b[4:3m'
         BLINK               = b'\x1b[5m'
         REVERSE             = b'\x1b[7m'
-        INVISIBLE           = b'\x1b[8m'    # Invisible but copy-pasteable
+        INVISIBLE           = b'\x1b[8m'
+        '''Invisible but copy-pasteable'''
         STRIKETHROUGH       = b'\x1b[9m'
         OVERLINE            = b'\x1b[53m'
     class Color:

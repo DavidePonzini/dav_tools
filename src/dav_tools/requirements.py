@@ -5,8 +5,10 @@ from . import messages as _messages
 import os as _os
 import ctypes as _ctypes
 import platform as _platform
+import elevate as _elevate
 
-def require(root=False, os:list[str]=[]):
+
+def require(root = False, os: list[str] = []):
     '''
     Require the program to statisfy the given requirements before continuing its execution.
 
@@ -19,10 +21,8 @@ def require(root=False, os:list[str]=[]):
     if root:
         _require_root()
 
-def _require_root(auto_elevate=True):
-    if auto_elevate:
-        import elevate as _elevate
-        _elevate.elevate(graphical=False)
+def _require_root():
+    _elevate.elevate(graphical=False)
 
     if _platform.system() == 'Windows':
         if _ctypes.WinDLL('Shell32').IsUserAnAdmin() == 0:

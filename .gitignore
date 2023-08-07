@@ -5,3 +5,4 @@ test.py
 
 # documentation
 docs/_build
+.pytest_cache

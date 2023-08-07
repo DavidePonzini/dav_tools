@@ -26,7 +26,7 @@ def message(*text: str | object,
     :param file: Where to write the message.
     '''
 
-    _clear_line()
+    _clear_line(file=file)
 
     # icon
     if icon is not None:
@@ -93,7 +93,7 @@ def progress(*text: str | object, text_min_len: list[int] = [], text_options: li
             end='\r',
             text_min_len=text_min_len,
             default_text_options=[
-                TextFormat.Color.DARKGRAY,
+                TextFormat.Style.DIM,
                 TextFormat.Style.ITALIC
             ],
             additional_text_options=text_options
