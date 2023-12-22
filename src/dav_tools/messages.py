@@ -2,10 +2,10 @@
 
 import sys as _sys
 
-from .text_color import TextFormat
-from .text_color import print_colored_text as _print_colored_text
-from .text_color import input_colored as _input_colored
-from .text_color import clear_line as _clear_line
+from .text_format import TextFormat
+from .text_format import print_text as _print_colored_text
+from .text_format import input_formatted as _input_colored
+from .text_format import clear_line as _clear_line
 
 
 def message(*text: str | object,

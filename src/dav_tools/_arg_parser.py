@@ -1,7 +1,7 @@
 '''Customized argument parser.'''
 
 import argparse
-from . import text_color
+from . import text_format
 
 class ArgumentAction:
     STORE = 'store'
@@ -60,7 +60,7 @@ class ArgumentParser:
         :param email: Email address to be displayed
         '''
 
-        self.parser.epilog = text_color.get_colored_text(f'--Developed by {name} ({email})', text_color.TextFormat.Style.ITALIC)
+        self.parser.epilog = text_format.format_text(f'--Developed by {name} ({email})', text_format.TextFormat.Style.ITALIC)
 
     @property
     def args(self) -> argparse.Namespace:
@@ -88,7 +88,7 @@ class ArgumentParser:
         if description is None:
             group = self.parser.add_argument_group(name)
         else:
-            group = self.parser.add_argument_group(name, text_color.get_colored_text(description, text_color.TextFormat.Style.ITALIC))
+            group = self.parser.add_argument_group(name, text_format.format_text(description, text_format.TextFormat.Style.ITALIC))
 
         self.__groups[name] = group
         return group
