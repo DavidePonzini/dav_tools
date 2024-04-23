@@ -72,9 +72,12 @@ def info(*text: str | object, text_min_len: list[int] = [], text_options: list[l
     message(*text,
             icon='*',
             icon_options=[
-                TextFormat.Color.BLUE
+                TextFormat.Color.CYAN
             ],
             text_min_len=text_min_len,
+            default_text_options=[
+                TextFormat.Color.CYAN
+            ],
             additional_text_options=text_options,
             blink=blink)
 
