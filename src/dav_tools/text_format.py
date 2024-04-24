@@ -72,9 +72,15 @@ def input_formatted(*format_options) -> str:
 
     :returns: User input.
     '''
-    _set_format(*format_options, file=_sys.stderr)
-    result = input()
-    _set_format(TextFormat.RESET)
+
+    result = None
+
+    try:
+        _set_format(*format_options, file=_sys.stderr)
+        result = input()
+    except KeyboardInterrupt as e:
+        _set_format(TextFormat.RESET, file=_sys.stderr)
+        raise e
 
     return result
 

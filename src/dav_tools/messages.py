@@ -212,9 +212,11 @@ def ask(question: str, end=': ') -> str:
             icon_options=[
                 TextFormat.Color.PURPLE
             ],
+            default_text_options=[TextFormat.Color.PURPLE],
             end='')
     
     return _input_colored(
+        TextFormat.Color.PURPLE,
         TextFormat.Style.ITALIC,
     )
 
