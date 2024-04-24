@@ -78,6 +78,7 @@ def input_formatted(*format_options) -> str:
     try:
         _set_format(*format_options, file=_sys.stderr)
         result = input()
+        _set_format(TextFormat.RESET, file=_sys.stderr)
     except KeyboardInterrupt as e:
         _set_format(TextFormat.RESET, file=_sys.stderr)
         raise e
