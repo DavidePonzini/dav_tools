@@ -18,7 +18,8 @@ def _get_format(*options) -> str:
     result = ''
 
     for option in options:
-        result += option.decode()
+        if option is not None:
+            result += option.decode()
 
     return result
 
@@ -31,7 +32,8 @@ def _set_format(*options, file = _sys.stdout):
     '''
 
     for option in options:
-        print(option.decode(), end='', file=file)
+        if option is not None:
+            print(option.decode(), end='', file=file)
 
 def format_text(text: str, *format_options) -> str:
     '''
