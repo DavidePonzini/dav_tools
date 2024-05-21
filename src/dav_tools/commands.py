@@ -24,7 +24,7 @@ def execute(command: str, stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sy
     return exit_status == 0
 
 def get_output(command: str, on_success: _Callable[[bytes], any] = lambda x: x, on_error: _Callable[[], any] = None,
-               stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sys.stderr):
+               stdin = _sys.stdin, stderr = _sys.stderr):
     '''
     Run a command and return its output.
     
@@ -34,11 +34,10 @@ def get_output(command: str, on_success: _Callable[[bytes], any] = lambda x: x, 
     :param on_error: call the specified function if the command raised an exception. If this value is `None`, raises the exception.
 
     :param stdin: input redirection
-    :param stdout: output redirection
     :param stderr: error redirection
             '''
     try:
-        return on_success(_subprocess.check_output(_split(command), stdin=stdin, stdout=stdout, stderr=stderr))
+        return on_success(_subprocess.check_output(_split(command), stdin=stdin, stderr=stderr))
     except CalledProcessError as e:
         if on_error is None:
             raise e
