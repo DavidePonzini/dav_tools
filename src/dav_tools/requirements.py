@@ -8,6 +8,12 @@ import platform as _platform
 import elevate as _elevate
 
 
+class OS:
+    WINDOWS = 'Windows'
+    LINUX = 'Linux'
+    MAC = 'Mac'
+
+
 def require(root = False, os: list[str] = []):
     '''
     Require the program to statisfy the given requirements before continuing its execution.
