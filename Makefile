@@ -1,7 +1,7 @@
 # Makefile by Davide Ponzini
 
 NAME=dav-tools
-PY=python3
+PY=python
 
 
 prepare: test documentation
