@@ -41,7 +41,7 @@ class PostgreSQL:
             table=_sql.Identifier(table),
             fields=_sql.SQL(',').join([_sql.Identifier(key) for key in data.keys()]),
             values=_sql.SQL(',').join([_sql.Placeholder(key) for key in data.keys()]),
-            return_fields=_sql.SQL(',').join([_sql.Placeholder(key) for key in return_fields])
+            return_fields=_sql.SQL(',').join([_sql.Identifier(key) for key in return_fields])
         )
 
         self._cursor.execute(query, data)
