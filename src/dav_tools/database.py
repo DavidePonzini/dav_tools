@@ -1,7 +1,7 @@
 '''Database interaction'''
 
 import psycopg2 as _psycopg2
-from psycopg2 import sql as _sql
+from psycopg2 import sql
 
 class PostgreSQL:
     '''Connection with a PostgreSQL database'''
@@ -12,6 +12,15 @@ class PostgreSQL:
                                 password=password)
 
         self._cursor = self._connection.cursor()
+
+    def get_query_string(self, query: sql.SQL):
+        return query.as_string(self._connection)
+    
+    def execute(self, query: sql.SQL, data: dict[str, any] = None):
+        return self._cursor.execute(query, data)
+    
+    def commit(self):
+        self._connection.commit()
 
     def insert(self, schema: str, table: str, data: dict[str, any], commit: bool = True, return_fields: list[str] = []):
         '''
@@ -36,21 +45,21 @@ class PostgreSQL:
         else:
             base_query = 'INSERT INTO {schema}.{table}({fields}) VALUES({values})'
 
-        query = _sql.SQL(base_query).format(
-            schema=_sql.Identifier(schema),
-            table=_sql.Identifier(table),
-            fields=_sql.SQL(',').join([_sql.Identifier(key) for key in data.keys()]),
-            values=_sql.SQL(',').join([_sql.Placeholder(key) for key in data.keys()]),
-            return_fields=_sql.SQL(',').join([_sql.Identifier(key) for key in return_fields])
+        query = sql.SQL(base_query).format(
+            schema=sql.Identifier(schema),
+            table=sql.Identifier(table),
+            fields=sql.SQL(',').join([sql.Identifier(key) for key in data.keys()]),
+            values=sql.SQL(',').join([sql.Placeholder(key) for key in data.keys()]),
+            return_fields=sql.SQL(',').join([sql.Identifier(key) for key in return_fields])
         )
 
-        self._cursor.execute(query, data)
+        self.execute(query, data)
 
         return_value = None
         if len(return_fields) > 0:
             return_value = self._cursor.fetchone()
 
         if commit:
-            self._connection.commit()
+            self.commit()
 
         return return_value
