@@ -3,26 +3,72 @@
 import psycopg2 as _psycopg2
 from psycopg2 import sql
 
-class PostgreSQL:
-    '''Connection with a PostgreSQL database'''
-    def __init__(self, database: str, host: str, user: str, password: str) -> None:        
-        self._connection = _psycopg2.connect(database=database,
-                                host=host,
-                                user=user,
-                                password=password)
+class PostgreSQLConnection():
+    def __init__(self, database: str, host: str, user: str, password: str) -> None:
+        self._database = database
+        self._host = host
+        self._user = user
+        self._password = password
+
+    def __enter__(self):
+        self._connection = _psycopg2.connect(database=self._database,
+                                 host=self._host,
+                                 user=self._user,
+                                 password=self._password)
 
         self._cursor = self._connection.cursor()
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._cursor.close()
+        self._connection.close()
 
-    def get_query_string(self, query: sql.SQL):
-        return query.as_string(self._connection)
-    
-    def execute(self, query: sql.SQL, data: dict[str, any] = None):
-        return self._cursor.execute(query, data)
-    
     def commit(self):
         self._connection.commit()
 
-    def insert(self, schema: str, table: str, data: dict[str, any], commit: bool = True, return_fields: list[str] = []):
+    def cancel(self):
+        self._connection.cancel()
+
+    def execute(self, query: str, data: dict[str, any] | None = None, commit: bool = True):
+        result = self._cursor.execute(query, data)
+
+        if commit:
+            self.commit()
+
+        return result
+    
+    def fetch_one(self) -> tuple[any, ...] | None:
+        return self._cursor.fetchone()
+    
+    def fetch_all(self) -> list[tuple[any, ...]]:
+        return self._cursor.fetchall()
+
+class PostgreSQL:
+    '''Connection with a PostgreSQL database'''
+    def __init__(self, database: str, host: str, user: str, password: str) -> None:     
+        self._database = database
+        self._host = host
+        self._user = user
+        self._password = password
+
+    def connect(self) -> PostgreSQLConnection:
+        return PostgreSQLConnection(self._database, self._host, self._user, self._password)
+
+    def get_query_string(self, query: sql.SQL):
+        with self.connect() as c:
+            return query.as_string(c._connection)
+        
+    def execute(self, query: str, data: dict[str, any] | None = None, commit: bool = True) -> None:
+        with self.connect() as c:
+            c.execute(query, data)
+
+    def execute_and_fetch(self, query: str, data: dict[str, any] | None = None) -> list[tuple[any, ...]]:
+        with self.connect() as c:
+            c.execute(query, data)
+            return c.fetch_all()
+
+
+    def insert(self, schema: str, table: str, data: dict[str, any], return_fields: list[str] = []):
         '''
         Inserts a row into a specified table within a PostgreSQL database.
 
@@ -53,13 +99,6 @@ class PostgreSQL:
             return_fields=sql.SQL(',').join([sql.Identifier(key) for key in return_fields])
         )
 
-        self.execute(query, data)
-
-        return_value = None
         if len(return_fields) > 0:
-            return_value = self._cursor.fetchone()
-
-        if commit:
-            self.commit()
-
-        return return_value
+            return self.execute_and_fetch(query, data)
+        return self.execute(query, data)
