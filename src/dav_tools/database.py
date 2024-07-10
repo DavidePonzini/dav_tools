@@ -43,6 +43,40 @@ class PostgreSQLConnection():
     def fetch_all(self) -> list[tuple[any, ...]]:
         return self._cursor.fetchall()
     
+    def set_schema(self, schema: str):
+        query = sql.SQL(
+            'SET search_path TO {schema}'
+        ).format(
+            schema=sql.Identifier(schema)
+        )
+ 
+        self.execute(query, {
+            'schema': schema
+        })
+
+    def create_schema(self, schema: str):
+        query = sql.SQL(
+            'CREATE SCHEMA IF NOT EXISTS {schema}'
+        ).format(
+            schema=sql.Identifier(schema)
+        )
+ 
+        self.execute(query, {
+            'schema': schema
+        })
+
+
+    def delete_schema(self, schema: str):
+        query = sql.SQL(
+            'DROP SCHEMA IF EXISTS {schema} CASCADE'
+        ).format(
+            schema=sql.Identifier(schema)
+        )
+ 
+        self.execute(query, {
+            'schema': schema
+        })
+
     def insert(self, schema: str, table: str, data: dict[str, any], return_fields: list[str] = []):
         '''
         Inserts a row into a specified table within a PostgreSQL database.
