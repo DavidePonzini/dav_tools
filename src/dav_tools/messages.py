@@ -7,6 +7,8 @@ from .text_format import print_text as _print_colored_text
 from .text_format import input_formatted as _input_colored
 from .text_format import clear_line as _clear_line
 
+_debug_counter = 0
+
 
 def message(*text: str | object,
             text_min_len: list[int] = [], default_text_options: list = [], additional_text_options: list[list] = [[]],
@@ -58,6 +60,31 @@ def message(*text: str | object,
     # line end and flushing
     _print_colored_text(end=end, file=file, flush=True)
     
+
+def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+    '''
+    Debugging message, which stands out from all other messages. Each messages has also a unique ID.
+    
+    :param text: The message(s) to print.
+    :param color: Message color. Default = Purple
+    :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
+    :param text_options: Styling options applied to single messages.
+    '''
+
+    global _debug_counter
+    _debug_counter += 1
+
+    message(*text,
+            icon=f'DEBUG {_debug_counter:04}',
+            icon_options=[
+                color,
+                TextFormat.Style.REVERSE,
+            ],
+            text_min_len=text_min_len,
+            default_text_options=[
+                color,
+            ],
+            additional_text_options=text_options)
 
 def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
     '''
