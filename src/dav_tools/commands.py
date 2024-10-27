@@ -1,12 +1,10 @@
 '''External command execution on local machine.'''
 
-import platform as _platform
 import subprocess as _subprocess
 from shlex import split as _split
 from subprocess import CalledProcessError
 from typing import Callable as _Callable
 import sys as _sys
-
 
 def execute(command: str, stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sys.stderr) -> bool:
     '''
@@ -42,4 +40,3 @@ def get_output(command: str, on_success: _Callable[[bytes], any] = lambda x: x, 
         if on_error is None:
             raise e
         return on_success(on_error())
-    
