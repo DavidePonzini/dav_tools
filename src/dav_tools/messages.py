@@ -247,7 +247,7 @@ def ask(question: str, end=': ') -> str:
         TextFormat.Style.ITALIC,
     )
 
-def ask_continue(text: str=None):
+def ask_continue(text: str=None, default_yes=False):
     '''
     Prints a question asking the user if they want to continue executing the program:
     a positive answer makes the program continues its normal execution;
@@ -255,18 +255,24 @@ def ask_continue(text: str=None):
     Optionally supports a custom message.
     
     :param text: The message to print.
+    :param default_yes: Automatically accept when pressing Enter.
     '''
     if text is not None:
-        message = f'{text}. Continue? (y/N)'
+        message = f'{text}. Continue?'
     else:
-        message = 'Continue? (y/N)'
+        message = 'Continue?'
+
+    if default_yes:
+        message += ' (Y/n)'
+    else:
+        message += ' (y/N)'
 
     while True:
         ans = ask(message, end=' ')
 
-        if ans.lower() == 'y':
+        if ans.lower() == 'y' or (len(ans) == 0 and default_yes):
             break
-        if ans.lower() == 'n' or len(ans) == 0:
+        if ans.lower() == 'n' or (len(ans) == 0 and not default_yes):
             _sys.exit(1)
 
 
