@@ -143,6 +143,10 @@ class ArgumentParser:
         
         self.add_argument('--verbose', group=self.__group('verbosity'), help='Prints additional debug messages', action=ArgumentAction.STORE_TRUE)
 
+    @property
+    def is_verbose(self):
+        return 'verbose' in self.args and self.args.verbose
+
 
 if __name__ == '__main__':
     argparser = ArgumentParser()
