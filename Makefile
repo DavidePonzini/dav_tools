@@ -21,11 +21,11 @@ documentation:
 	make html -C docs/
 
 test: install
-	pytest
+	$(PY) -m pytest
 
 requirements.txt:
 	$(PY) -m pip install pipreqs
-	pipreqs --mode no-pin --force
+	$(PY) -m pipreqs --mode no-pin --force
 
 required-packages: requirements.txt
 	$(PY) -m pip install --upgrade build autoapi pytest -r requirements.txt
