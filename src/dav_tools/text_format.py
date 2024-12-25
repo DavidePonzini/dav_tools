@@ -5,68 +5,40 @@ import os as _os
 from ._text_format import TextFormat
 
 
-def _get_format(*options) -> str:
-    '''
-    Get the format string generated from the arguments.
-    Needed for manually setting text style. Otherwise use ``set_format()``.
+class FormattedText:
+    def __init__(self, text: str, *options: bytes):
+        self.text = text
+        self.options = options
 
-    :param option: Text styling options.
+    def get_format(self) -> str:
+        result = ''
 
-    :returns: The format string corresponding to the options.
-    '''
+        for option in self.options:
+            if option is not None:
+                result += option.decode()
 
-    result = ''
-
-    for option in options:
-        if option is not None:
-            result += option.decode()
-
-    return result
-
-def _set_format(*options, file = _sys.stdout):
-    '''
-    Set text styling.
-
-    :param option: Text styling options.
-    :param file: Where to set text styling.
-    '''
-
-    for option in options:
-        if option is not None:
-            print(option.decode(), end='', file=file)
-
-def format_text(text: str, *format_options) -> str:
-    '''
-    Return a styled text.
-
-    :param text: Text to print.
-    :param format_options: Text styling options.
-
-    :returns: The text properly styled.
-    '''
+        return result
     
-    result = ''
-    result += _get_format(*format_options)
-    result += text
-    result += _get_format(TextFormat.RESET)
+    @staticmethod
+    def reset_format() -> str:
+        return TextFormat.RESET.decode()
 
-    return result
+    def __str__(self) -> str:
+        if len(self.options) == 0:
+            return self.text
+        
+        result = ''
+        result += self.get_format()
+        result += self.text
+        result += self.reset_format()
 
-def print_text(text: str = '', *format_options, end: str='\n', file=_sys.stdout, flush=False):
-    '''
-    Print a styled text.
+        return result
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+    
 
-    :param text: Text to print.
-    :param format_options: Text styling options.
-    :param end: Character to be printed after the text.
-    :param file: Where to print the text.
-    :param flush: Whether to flush the stream after printing.
-    '''
-
-    text = format_text(text, *format_options)
-    print(text, end=end, file=file, flush=flush)
-
-def input_formatted(*format_options) -> str:
+def read_input(*format_options: bytes) -> str:
     '''
     Ask input from a user using specified styling options.
 
@@ -76,18 +48,19 @@ def input_formatted(*format_options) -> str:
     '''
 
     result = None
+    format = FormattedText('', *format_options)
 
     try:
-        _set_format(*format_options, file=_sys.stderr)
+        print(format.get_format(), file=_sys.stderr, end='')
         result = input()
-        _set_format(TextFormat.RESET, file=_sys.stderr)
+        print(format.reset_format(), file=_sys.stderr, end='')
     except KeyboardInterrupt as e:
-        _set_format(TextFormat.RESET, file=_sys.stderr)
+        print(format.reset_format(), file=_sys.stderr, end='')
         raise e
 
     return result
 
-def clear_line(file=_sys.stdout, flush=False):
+def clear_line(file=_sys.stdout, flush: bool = False):
     '''
     Clears the current line from any text of formatting.
     Not really suitable for files.
@@ -96,6 +69,9 @@ def clear_line(file=_sys.stdout, flush=False):
     :param flush: Whether to flush the stream after printing.
     '''
     
+    if file is None:
+        return
+
     try:
         size = _os.get_terminal_size().columns
         print('\r', ' ' * size, '\r',

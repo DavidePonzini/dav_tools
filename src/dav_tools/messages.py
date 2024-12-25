@@ -3,8 +3,9 @@
 import sys as _sys
 
 from .text_format import TextFormat
-from .text_format import print_text as _print_colored_text
-from .text_format import input_formatted as _input_colored
+
+from .text_format import FormattedText as _FormattedText
+from .text_format import read_input as _read_input
 from .text_format import clear_line as _clear_line
 
 _debug_counter = 0
@@ -12,8 +13,8 @@ _debug_counter = 0
 
 def message(*text: str | object,
             text_min_len: list[int] = [], default_text_options: list = [], additional_text_options: list[list] = [[]],
-            icon: str = None, icon_options: list = [], blink: bool = False,
-            end: str = '\n', file = _sys.stderr):
+            icon: str = None, icon_options: list = [],
+            end: str = '\n', file = _sys.stderr) -> str:
     '''
     Generic and customizable message.
 
@@ -23,42 +24,39 @@ def message(*text: str | object,
     :param additional_text_options: Styling options applied to single messages.
     :param icon: Character to use as icon, between ``[ ]``.
     :param icon_options: Styling options applied to the icon.
-    :param blink: If True, the icon blinks.
     :param end: Character to output at the end of the message.
     :param file: Where to write the message.
     '''
 
     _clear_line(file=file)
 
+    result = ''
+
     # icon
     if icon is not None:
-        _print_colored_text('[', *icon_options, TextFormat.Style.BOLD, end='', file=file)
-        
-        if blink:
-            _print_colored_text(icon, *icon_options, TextFormat.Style.BOLD, TextFormat.Style.BLINK, end='', file=file)
-        else:
-            _print_colored_text(icon, *icon_options, TextFormat.Style.BOLD, end='', file=file)
-        
-        _print_colored_text(']', *icon_options, TextFormat.Style.BOLD, end='', file=file)
-        _print_colored_text(' ', end='', file=file)
+        result += str(_FormattedText(f'[{icon}]',  *icon_options, TextFormat.Style.BOLD))
+        result += ' '
     
     # text
     for i in range(len(text)):
         line_text = str(text[i])
-        line_options = default_text_options + additional_text_options[i] if i < len(additional_text_options) else default_text_options
+        line_options = (default_text_options + additional_text_options[i]) if i < len(additional_text_options) else default_text_options
         line_end = ' ' if i < len(text) - 1 else ''
 
-        _print_colored_text(line_text, *line_options, end=line_end, file=file)
+        result += str(_FormattedText(line_text, *line_options))
+        result += line_end
 
         # padding
         if i < len(text_min_len):
             line_padding = text_min_len[i] - len(line_text)
             if line_padding > 0:
-               _print_colored_text(' ' * line_padding, end='', file=file)
-        
+               result += ' ' * line_padding
 
-    # line end and flushing
-    _print_colored_text(end=end, file=file, flush=True)
+    # printing
+    if file is not None:
+        print(result, file=file, end=end, flush=True)
+    
+    return result
     
 
 def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]]):
@@ -86,14 +84,13 @@ def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_
             ],
             additional_text_options=text_options)
 
-def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
     '''
     Message indicating an information.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
-    :param blink: If True, the icon blinks.
     '''
 
     message(*text,
@@ -105,8 +102,7 @@ def info(*text: str | object, text_min_len: list[int] = [], text_options: list[l
             default_text_options=[
                 TextFormat.Color.CYAN
             ],
-            additional_text_options=text_options,
-            blink=blink)
+            additional_text_options=text_options)
 
 
 def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
@@ -130,19 +126,17 @@ def progress(*text: str | object, text_min_len: list[int] = [], text_options: li
     )
 
 
-def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
     '''
     Message indicating an error.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
-    :param blink: If True, the icon blinks.
     '''
     
     message(*text, 
             icon='-', 
-            blink=blink,
             icon_options=[
                 TextFormat.Color.RED
             ],
@@ -154,19 +148,17 @@ def error(*text: str | object, text_min_len: list[int] = [], text_options: list[
     )
 
 
-def critical_error(*text: str | object, text_min_len: list[int] = [], blink: bool = False, exit_code: int = 1):
+def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code: int = 1):
     '''
     Message indicating a critical error. The program terminates after showing this message.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
-    :param blink: If True, the icon blinks.
     :param exit_code: The exit code of the program.
     '''
     
     message(*text, 
             icon='x', 
-            blink=blink,
             icon_options=[
                 TextFormat.Color.RED
             ],
@@ -179,19 +171,17 @@ def critical_error(*text: str | object, text_min_len: list[int] = [], blink: boo
     _sys.exit(exit_code)
 
 
-def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
     '''
     Message indicating a warning.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
-    :param blink: If True, the icon blinks.
     '''
 
     message(*text, 
             icon='!', 
-            blink=blink,
             icon_options=[
                 TextFormat.Color.YELLOW
             ],
@@ -202,19 +192,17 @@ def warning(*text: str | object, text_min_len: list[int] = [], text_options: lis
     )
 
 
-def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], blink: bool = False):
+def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
     '''
     Message indicating a successfully completed action.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
-    :param blink: If True, the icon blinks.
     '''
 
     message(*text, 
             icon='+', 
-            blink=blink,
             icon_options=[
                 TextFormat.Color.GREEN
             ],
@@ -242,7 +230,7 @@ def ask(question: str, end=': ') -> str:
             default_text_options=[TextFormat.Color.PURPLE],
             end='')
     
-    return _input_colored(
+    return _read_input(
         TextFormat.Color.PURPLE,
         TextFormat.Style.ITALIC,
     )
@@ -268,11 +256,11 @@ def ask_continue(text: str=None, default_yes=False):
         message += ' (y/N)'
 
     while True:
-        ans = ask(message, end=' ')
+        answer = ask(message, end=' ')
 
-        if ans.lower() == 'y' or (len(ans) == 0 and default_yes):
+        if answer.lower() == 'y' or (len(answer) == 0 and default_yes):
             break
-        if ans.lower() == 'n' or (len(ans) == 0 and not default_yes):
+        if answer.lower() == 'n' or (len(answer) == 0 and not default_yes):
             _sys.exit(1)
 
 
