@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dav_tools"
-version = "0.4.0"
+version = "0.4.1"
 authors = [
   { name="Davide Ponzini", email="davide.ponzini95@gmail.com" },
 ]
 description = "Various utilies to aid in program development."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
