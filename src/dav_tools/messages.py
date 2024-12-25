@@ -272,7 +272,8 @@ if __name__ == '__main__':
     argument_parser.set_developer_info('Davide Ponzini', 'davide.ponzini95@gmail.com')
 
     argument_parser.add_argument('message_type',
-                                 choices=['info', 'success', 'warning', 'error', 'critical_error', 'ask', 'ask_continue'], help='Message type')
+                                 choices=['info', 'success', 'warning', 'error', 'critical_error', 'ask', 'ask_continueN', 'ask_continueY'],
+                                 help='Message type')
     argument_parser.add_argument('message', nargs='*')
     
     mess_type = argument_parser.args.message_type
@@ -296,5 +297,8 @@ if __name__ == '__main__':
     elif mess_type == 'ask':
         print(ask(mess_text[0]))
     
-    elif mess_type == 'ask_continue':
-        ask_continue(mess_text[0] if len(mess_text) > 0 else None)
+    elif mess_type == 'ask_continueN':
+        ask_continue(mess_text[0] if len(mess_text) > 0 else None, default_yes=False)
+
+    elif mess_type == 'ask_continueY':
+        ask_continue(mess_text[0] if len(mess_text) > 0 else None, default_yes=True)
