@@ -1,7 +1,7 @@
 dist/
 __pycache__/
 test.py
-./requirements.txt
+venv/
 
 # documentation
 docs/_build
