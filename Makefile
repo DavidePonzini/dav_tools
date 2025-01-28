@@ -2,7 +2,7 @@
 # Type: PyPi
 # Author: Davide Ponzini
 
-NAME=dav-tools
+NAME=dav_tools
 VENV=./venv
 
 ifeq ($(OS),Windows_NT)
