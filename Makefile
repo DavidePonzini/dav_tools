@@ -12,7 +12,7 @@ else
 endif
 
 
-venv:
+$(VENV):
 	python -m venv --clear $(VENV)
 	$(VENV_BIN)/python -m pip install --upgrade -r requirements.txt
 

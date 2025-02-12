@@ -59,7 +59,7 @@ def message(*text: str | object,
     return result
     
 
-def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Debugging message, which stands out from all other messages. Each messages has also a unique ID.
     
@@ -67,6 +67,7 @@ def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_
     :param color: Message color. Default = Purple
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
 
     global _debug_counter
@@ -82,15 +83,17 @@ def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_
             default_text_options=[
                 color,
             ],
-            additional_text_options=text_options)
+            additional_text_options=text_options,
+            file=file)
 
-def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Message indicating an information.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
 
     message(*text,
@@ -102,16 +105,18 @@ def info(*text: str | object, text_min_len: list[int] = [], text_options: list[l
             default_text_options=[
                 TextFormat.Color.CYAN
             ],
-            additional_text_options=text_options)
+            additional_text_options=text_options,
+            file=file)
 
 
-def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Message indicating an action which is still happening.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
 
     message(*text,
@@ -126,13 +131,14 @@ def progress(*text: str | object, text_min_len: list[int] = [], text_options: li
     )
 
 
-def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Message indicating an error.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
     
     message(*text, 
@@ -144,17 +150,19 @@ def error(*text: str | object, text_min_len: list[int] = [], text_options: list[
             default_text_options=[
                 TextFormat.Color.RED
             ],
-            additional_text_options=text_options
+            additional_text_options=text_options,
+            file=file
     )
 
 
-def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code: int = 1):
+def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code: int = 1, file = _sys.stderr):
     '''
     Message indicating a critical error. The program terminates after showing this message.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param exit_code: The exit code of the program.
+    :param file: Where to write the message.
     '''
     
     message(*text, 
@@ -165,19 +173,21 @@ def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code:
             text_min_len=text_min_len,
             default_text_options=[
                 TextFormat.Color.RED
-            ]
+            ],
+            file=file
     )
 
     _sys.exit(exit_code)
 
 
-def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Message indicating a warning.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
 
     message(*text, 
@@ -188,17 +198,20 @@ def warning(*text: str | object, text_min_len: list[int] = [], text_options: lis
             text_min_len=text_min_len,
             default_text_options=[
                 TextFormat.Color.YELLOW
-            ]
+            ],
+            additional_text_options=text_options,
+            file=file
     )
 
 
-def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]]):
+def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
     '''
     Message indicating a successfully completed action.
     
     :param text: The message(s) to print.
     :param text_min_len: Minimum length for each message. Fill the remaining characters with spaces.
     :param text_options: Styling options applied to single messages.
+    :param file: Where to write the message.
     '''
 
     message(*text, 
@@ -208,16 +221,18 @@ def success(*text: str | object, text_min_len: list[int] = [], text_options: lis
             ],
             text_min_len=text_min_len,
             default_text_options=[TextFormat.Color.GREEN],
-            additional_text_options=text_options
+            additional_text_options=text_options,
+            file=file
     )
 
 
-def ask(question: str, end=': ') -> str:
+def ask(question: str, end=': ', file = _sys.stderr) -> str:
     '''
     Prints a question to screen and returns the answer.
     
     :param question: The question to print.
     :param end: Characters to be printed at the end of the question.
+    :param file: Where to write the message.
     
     :returns: The user's answer.
     '''
@@ -228,14 +243,15 @@ def ask(question: str, end=': ') -> str:
                 TextFormat.Color.PURPLE
             ],
             default_text_options=[TextFormat.Color.PURPLE],
-            end='')
+            end='',
+            file=file)
     
     return _read_input(
         TextFormat.Color.PURPLE,
         TextFormat.Style.ITALIC,
     )
 
-def ask_continue(text: str=None, default_yes=False):
+def ask_continue(text: str=None, default_yes=False, file = _sys.stderr):
     '''
     Prints a question asking the user if they want to continue executing the program:
     a positive answer makes the program continues its normal execution;
@@ -244,6 +260,7 @@ def ask_continue(text: str=None, default_yes=False):
     
     :param text: The message to print.
     :param default_yes: Automatically accept when pressing Enter.
+    :param file: Where to write the message.
     '''
     if text is not None:
         message = f'{text}. Continue?'
@@ -256,7 +273,7 @@ def ask_continue(text: str=None, default_yes=False):
         message += ' (y/N)'
 
     while True:
-        answer = ask(message, end=' ')
+        answer = ask(message, end=' ', file=file)
 
         if answer.lower() == 'y' or (len(answer) == 0 and default_yes):
             break
