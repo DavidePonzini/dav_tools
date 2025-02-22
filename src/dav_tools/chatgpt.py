@@ -35,7 +35,7 @@ class Message:
             'content': message
         })
 
-    def generate_answer(self, *, model=AIModel.GPT4o_mini, json_format: _pydantic.BaseModel | None = None, add_to_messages=True, temperature=1, top_p=0.1, frequency_penalty=0) -> str | _pydantic.BaseModel:
+    def generate_answer(self, *, model=AIModel.GPT4o_mini, json_format: _pydantic.BaseModel | None = None, add_to_messages=True, **kwargs) -> str | _pydantic.BaseModel:
         """
         Generates a response based on the current conversation context.
 
@@ -43,9 +43,7 @@ class Message:
             model (AIModel, optional): The AI model used to generate the response. Defaults to `AIModel.GPT4o_mini`.
             json_format (_pydantic.BaseModel, optional): If provided, returns the response in the specified structured format. If `None`, the response is returned as plain text. Defaults to `None`.
             add_to_messages (bool, optional): If `True`, appends the generated response to the conversation history (`self.messages`). Defaults to `True`.
-            temperature (float, optional): Controls the randomness of the response. Values closer to 1 result in more varied responses, while values closer to 0 make responses more deterministic. Defaults to 1.
-            top_p (float, optional): Limits the response to a subset of tokens representing the top cumulative probability `p`. Lower values focus on higher-probability tokens. Defaults to 0.1.
-            frequency_penalty (float, optional): Reduces the likelihood of repeated phrases or words. Higher values penalize repetition more strongly. Defaults to 0.
+            **kwargs: Additional arguments to pass to the API.
 
         Returns:
             str | _pydantic.BaseModel: The generated response as plain text (`str`) or as format specified by `json_format`.
@@ -55,9 +53,7 @@ class Message:
             model=model,
             messages=self.messages,
             response_format={ 'type': 'text' } if json_format is None else json_format,
-            temperature=temperature,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty
+            **kwargs
         )
 
         self.usage.append(completion.usage)
@@ -95,9 +91,13 @@ class Message:
                 ]
             )
 
-def print_price(usage, cost_in_per_million_tokens, cost_out_per_million_tokens):
-    cost_in = usage.prompt_tokens / 1_000_000 * cost_in_per_million_tokens
-    cost_out = usage.completion_tokens / 1_000_000 * cost_out_per_million_tokens
+def print_price(*usage, cost_in_per_million_tokens, cost_out_per_million_tokens):
+    cost_in = 0
+    cost_out = 0
+    
+    for usage in usage:
+        cost_in += usage.prompt_tokens / 1_000_000 * cost_in_per_million_tokens
+        cost_out += usage.completion_tokens / 1_000_000 * cost_out_per_million_tokens
 
     _message(f'Cost: {(cost_in + cost_out):.5f} $ (in={usage.prompt_tokens}, out={usage.completion_tokens})',
                      icon='$', icon_options=[_TextFormat.Color.BLUE])

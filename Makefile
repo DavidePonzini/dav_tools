@@ -4,6 +4,7 @@
 
 NAME=dav_tools
 VENV=./venv
+REQUIREMENTS=requirements.txt
 
 ifeq ($(OS),Windows_NT)
 	VENV_BIN=$(VENV)/Scripts
@@ -14,16 +15,18 @@ endif
 
 $(VENV):
 	python -m venv --clear $(VENV)
-	$(VENV_BIN)/python -m pip install --upgrade -r requirements.txt
+	touch -a $(REQUIREMENTS)
+	$(VENV_BIN)/python -m pip install --upgrade -r $(REQUIREMENTS)
 
-prepare: test documentation
-	:
+$(VENV)_upgrade: $(VENV)
+	$(VENV_BIN)/python -m pip install --upgrade -r $(REQUIREMENTS)
+
 
 install: uninstall build
 	$(VENV_BIN)/python -m pip install ./dist/*.whl
 
 build: venv
-	sudo rm -rf dist/
+	rm -rf dist/
 	$(VENV_BIN)/python -m build
 
 uninstall:
@@ -35,10 +38,13 @@ documentation:
 test: install
 	$(VENV_BIN)/python -m pytest
 
-upload: prepare
+upload: test documentation
 	$(VENV_BIN)/python -m pip install --upgrade twine
 	$(VENV_BIN)/python -m twine upload --verbose dist/*
 
 download: uninstall
 	$(VENV_BIN)/python -m pip install $(NAME)
+
+
+########## Makefile end ##########
 
