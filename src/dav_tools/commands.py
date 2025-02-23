@@ -5,6 +5,7 @@ from shlex import split as _split
 from subprocess import CalledProcessError
 from typing import Callable as _Callable
 import sys as _sys
+import platform as _platform
 
 def execute(command: str, stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sys.stderr) -> bool:
     '''
@@ -40,3 +41,19 @@ def get_output(command: str, on_success: _Callable[[bytes], any] = lambda x: x, 
         if on_error is None:
             raise e
         return on_success(on_error())
+
+def is_installed(command: str) -> bool:
+    '''
+    Check if a command is installed on the system.
+
+    :param command: the command to check
+
+    :returns: `True` if the command is installed, `False` otherwise
+    '''
+
+    if _platform.system() == 'Windows':
+        command = f'cmd /c where {command}'
+    else:
+        command = f'which {command}'
+        
+    return _subprocess.call(_split(command), stdout=_subprocess.DEVNULL, stderr=_subprocess.DEVNULL) == 0
