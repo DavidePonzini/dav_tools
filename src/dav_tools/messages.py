@@ -251,6 +251,33 @@ def ask(question: str, end=': ', file = _sys.stderr) -> str:
         TextFormat.Style.ITALIC,
     )
 
+def ask_yn(text: str, default_yes=False, file = _sys.stderr) -> bool:
+    '''
+    Prints a question asking the user a Yes/No question.
+    Returns the answer as a boolean (Yes = True, No = False).
+    
+    :param text: The message to print.
+    :param default_yes: Automatically accept when pressing Enter.
+    :param file: Where to write the message.
+    '''
+    message = f'{text}'
+
+    if default_yes:
+        default_letter = _FormattedText('Y', TextFormat.Style.BOLD)
+        message += f' ({default_letter}/n)'
+    else:
+        default_letter = _FormattedText('N', TextFormat.Style.BOLD)
+        message += f' (y/{default_letter})'
+
+    while True:
+        answer = ask(message, end=' ', file=file)
+
+        if answer.lower() == 'y' or (len(answer) == 0 and default_yes):
+            return True
+        if answer.lower() == 'n' or (len(answer) == 0 and not default_yes):
+            return False
+
+
 def ask_continue(text: str=None, default_yes=False, file = _sys.stderr):
     '''
     Prints a question asking the user if they want to continue executing the program:
@@ -267,18 +294,8 @@ def ask_continue(text: str=None, default_yes=False, file = _sys.stderr):
     else:
         message = 'Continue?'
 
-    if default_yes:
-        message += ' (Y/n)'
-    else:
-        message += ' (y/N)'
-
-    while True:
-        answer = ask(message, end=' ', file=file)
-
-        if answer.lower() == 'y' or (len(answer) == 0 and default_yes):
-            break
-        if answer.lower() == 'n' or (len(answer) == 0 and not default_yes):
-            _sys.exit(1)
+    if not ask_yn(message, default_yes=default_yes, file=file):
+        _sys.exit(1)
 
 
 if __name__ == '__main__':
