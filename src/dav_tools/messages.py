@@ -263,11 +263,9 @@ def ask_yn(text: str, default_yes=False, file = _sys.stderr) -> bool:
     message = f'{text}'
 
     if default_yes:
-        default_letter = _FormattedText('Y', TextFormat.Style.BOLD)
-        message += f' ({default_letter}/n)'
+        message += f' (Y/n)'
     else:
-        default_letter = _FormattedText('N', TextFormat.Style.BOLD)
-        message += f' (y/{default_letter})'
+        message += f' (y/N)'
 
     while True:
         answer = ask(message, end=' ', file=file)
