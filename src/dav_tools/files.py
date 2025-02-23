@@ -29,10 +29,10 @@ def copy_file(src_path: str, dest_path: str, *, symlink: bool = False):
     if symlink:
         dest.symlink_to(src)
     else:
-        _shutil.copy2(src, dest)
+        _shutil.copy(src, dest)
 
 
-def delete_file(path: str):
+def delete_file(path: str) -> bool:
     '''
         Delete a file at the given path.
 
@@ -40,15 +40,18 @@ def delete_file(path: str):
 
         :raises Exception: if the path is not a valid file
 
-        :returns: None
+        :returns: whether the file was deleted or not
     '''
     
     file_path = _Path(path)
 
-    if not file_path.exists():
+    exists = file_path.exists()
+    if not exists:
         return
 
     if not file_path.is_file():
         raise Exception(f'{file_path} is not a file')
 
     file_path.unlink()
+
+    return exists
