@@ -29,7 +29,7 @@ def copy_file(src_path: str, dest_path: str, *, symlink: bool = False):
     if symlink:
         dest.symlink_to(src)
     else:
-        _shutil.copyfile(src, dest)
+        _shutil.copy2(src, dest)
 
 
 def delete_file(path: str):
