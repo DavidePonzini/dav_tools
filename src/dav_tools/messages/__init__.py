@@ -2,11 +2,11 @@
 
 import sys as _sys
 
-from .text_format import TextFormat
+from .formatted_text import TextFormat
+from .formatted_text import FormattedText
 
-from .text_format import FormattedText as _FormattedText
-from .text_format import read_input as _read_input
-from .text_format import clear_line as _clear_line
+from .utils import read_input as _read_input
+from .utils import clear_line as _clear_line
 
 _debug_counter = 0
 
@@ -34,7 +34,7 @@ def message(*text: str | object,
 
     # icon
     if icon is not None:
-        result += str(_FormattedText(f'[{icon}]',  *icon_options, TextFormat.Style.BOLD))
+        result += str(FormattedText(f'[{icon}]',  *icon_options, TextFormat.Style.BOLD))
         result += ' '
     
     # text
@@ -43,7 +43,7 @@ def message(*text: str | object,
         line_options = (default_text_options + additional_text_options[i]) if i < len(additional_text_options) else default_text_options
         line_end = ' ' if i < len(text) - 1 else ''
 
-        result += str(_FormattedText(line_text, *line_options))
+        result += str(FormattedText(line_text, *line_options))
         result += line_end
 
         # padding
@@ -226,7 +226,7 @@ def success(*text: str | object, text_min_len: list[int] = [], text_options: lis
     )
 
 
-def ask(question: str, end=': ', file = _sys.stderr) -> str:
+def ask(question: str, end=': ', secret: bool = False, file = _sys.stderr) -> str:
     '''
     Prints a question to screen and returns the answer.
     
@@ -249,6 +249,8 @@ def ask(question: str, end=': ', file = _sys.stderr) -> str:
     return _read_input(
         TextFormat.Color.PURPLE,
         TextFormat.Style.ITALIC,
+        secret=secret,
+        file=file
     )
 
 def ask_yn(text: str, default_yes=False, file = _sys.stderr) -> bool:
@@ -298,7 +300,7 @@ def ask_continue(text: str=None, default_yes=False, file = _sys.stderr):
 
 if __name__ == '__main__':
     '''Allow basic printing from other programs'''
-    from . import argument_parser
+    from .. import argument_parser
 
     argument_parser.set_description('Display a message with style')
     argument_parser.set_developer_info('Davide Ponzini', 'davide.ponzini95@gmail.com')

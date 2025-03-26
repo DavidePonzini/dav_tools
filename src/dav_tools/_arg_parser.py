@@ -1,8 +1,8 @@
 '''Customized argument parser.'''
 
 import argparse
-from .text_format import FormattedText as _FormattedText
-from .text_format import TextFormat as _TextFormat
+from .messages import FormattedText as _FormattedText
+from .messages import TextFormat as _TextFormat
 
 class ArgumentAction:
     STORE = 'store'
