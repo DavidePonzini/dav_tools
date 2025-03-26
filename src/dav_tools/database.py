@@ -4,17 +4,21 @@ import psycopg2 as _psycopg2
 from psycopg2 import sql
 
 class PostgreSQLConnection():
-    def __init__(self, database: str, host: str, user: str, password: str) -> None:
-        self._database = database
+    def __init__(self, host: str, port: int, database: str, user: str, password: str) -> None:
         self._host = host
+        self._port = port
+        self._database = database
         self._user = user
         self._password = password
 
     def __enter__(self):
-        self._connection = _psycopg2.connect(database=self._database,
-                                 host=self._host,
-                                 user=self._user,
-                                 password=self._password)
+        self._connection = _psycopg2.connect(
+            database=self._database,
+            port=self._port,
+            host=self._host,
+            user=self._user,
+            password=self._password
+        )
 
         self._cursor = self._connection.cursor()
         return self
@@ -84,7 +88,6 @@ class PostgreSQLConnection():
         :param schema: The schema name where the table resides.
         :param table: The name of the table to insert data into.
         :param data: A dictionary where keys are column names and values are the data to insert.
-        :param commit: Whether to commit the transaction after the insert. Defaults to True.
         :param return_fields: A list of fields to return after the insert. Defaults to an empty list.
 
         :returns: If `return_fields` is specified, returns a tuple containing the values of the requested fields. 
@@ -92,7 +95,6 @@ class PostgreSQLConnection():
 
         :notes: 
             - The `data` dictionary keys must match the column names of the table.
-            - If `commit` is False, the changes must be committed manually using the connection's `commit` method.
         '''
         
         if len(return_fields) > 0:
@@ -116,14 +118,15 @@ class PostgreSQLConnection():
 
 class PostgreSQL:
     '''Connection with a PostgreSQL database'''
-    def __init__(self, database: str, host: str, user: str, password: str) -> None:     
-        self._database = database
+    def __init__(self, host: str, port: int, database: str, user: str, password: str) -> None:     
         self._host = host
+        self._port = port
+        self._database = database
         self._user = user
         self._password = password
 
     def connect(self) -> PostgreSQLConnection:
-        return PostgreSQLConnection(self._database, self._host, self._user, self._password)
+        return PostgreSQLConnection(self._host, self._port, self._database, self._user, self._password)
 
     def get_query_string(self, query: sql.SQL):
         with self.connect() as c:
@@ -131,7 +134,7 @@ class PostgreSQL:
         
     def execute(self, query: str, data: dict[str, any] | None = None, commit: bool = True) -> None:
         with self.connect() as c:
-            c.execute(query, data)
+            c.execute(query, data, commit=commit)
 
     def execute_and_fetch(self, query: str, data: dict[str, any] | None = None) -> list[tuple[any, ...]]:
         with self.connect() as c:
@@ -146,7 +149,6 @@ class PostgreSQL:
         :param schema: The schema name where the table resides.
         :param table: The name of the table to insert data into.
         :param data: A dictionary where keys are column names and values are the data to insert.
-        :param commit: Whether to commit the transaction after the insert. Defaults to True.
         :param return_fields: A list of fields to return after the insert. Defaults to an empty list.
 
         :returns: If `return_fields` is specified, returns a tuple containing the values of the requested fields. 
@@ -154,7 +156,6 @@ class PostgreSQL:
 
         :notes: 
             - The `data` dictionary keys must match the column names of the table.
-            - If `commit` is False, the changes must be committed manually using the connection's `commit` method.
         '''
         
         with self.connect() as c:

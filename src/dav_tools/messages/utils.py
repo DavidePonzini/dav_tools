@@ -25,7 +25,7 @@ def read_input(*format_options: bytes, secret: bool = False, file=_sys.stderr) -
     try:
         print(format.get_format(), file=file, end='')
         if secret:
-            result = _getpass.getpass(prompt='', stream=file)
+            result = _getpass.getpass(prompt='')
         else:
             result = input()
         print(format.reset_format(), file=file, end='')
