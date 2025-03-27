@@ -7,7 +7,6 @@ import os as _os
 import pydantic as _pydantic
 
 
-# If we don't have the API key set, we cannot use this module
 if _os.getenv('OPENAI_API_KEY') is None:
     _client = None
 else:
