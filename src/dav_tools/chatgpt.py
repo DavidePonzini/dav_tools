@@ -1,7 +1,7 @@
 '''Manage messages and generate answers using ChatGPT API'''
 
 from .messages import TextFormat as _TextFormat
-from .messages import message as _message, critical_error as _critical_error
+from .messages import message as _message, error as _error
 from openai import OpenAI as _OpenAI
 import os as _os
 import pydantic as _pydantic
@@ -9,9 +9,9 @@ import pydantic as _pydantic
 
 # If we don't have the API key set, we cannot use this module
 if _os.getenv('OPENAI_API_KEY') is None:
-    _critical_error('You must set `OPENAI_API_KEY` in environment.')
-
-_client = _OpenAI()
+    _client = None
+else:
+    _client = _OpenAI()
 
 
 class MessageRole:
@@ -47,7 +47,12 @@ class Message:
 
         Returns:
             str | _pydantic.BaseModel: The generated response as plain text (`str`) or as format specified by `json_format`.
+
         """
+
+        if _client is None:
+            _error('You must set `OPENAI_API_KEY` in environment.')
+            raise Exception('OPENAI_API_KEY not set')
 
         completion = _client.beta.chat.completions.parse(
             model=model,
