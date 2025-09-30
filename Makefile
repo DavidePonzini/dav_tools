@@ -12,6 +12,7 @@ else
 	VENV_BIN=$(VENV)/bin
 endif
 
+.PHONY: install build uninstall documentation test upload download clean
 
 $(VENV):
 	python -m venv --clear $(VENV)
@@ -45,6 +46,9 @@ upload: test documentation
 download: uninstall
 	$(VENV_BIN)/python -m pip install $(NAME)
 
+clean:
+	find . -type d -name '__pycache__' -print0 | xargs -0 rm -r || true
+	rm -rf dist docs/_build
 
 ########## Makefile end ##########
 
