@@ -35,7 +35,7 @@ def read_input(*format_options: bytes, secret: bool = False, file=_sys.stderr) -
 
     return result
 
-def clear_line(file=_sys.stdout, flush: bool = False):
+def clear_line(file=_sys.stdout, flush: bool = False) -> None:
     '''
     Clears the current line from any text of formatting.
     Not really suitable for files.

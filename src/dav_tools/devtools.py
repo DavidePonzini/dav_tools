@@ -5,7 +5,7 @@ from types import ModuleType as _ModuleType
 import sys as _sys
 import os as _os
 
-def reload_module(module: _ModuleType):
+def reload_module(module: _ModuleType) -> None:
     '''
     Hot-reload an imported module
 
@@ -14,7 +14,7 @@ def reload_module(module: _ModuleType):
 
     _importlib.reload(module)
 
-def import_from(folder: str, module: str):
+def import_from(folder: str, module: str) -> None:
     '''
     Import a module from any folder
     

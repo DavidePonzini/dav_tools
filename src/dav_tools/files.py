@@ -4,7 +4,7 @@ import shutil as _shutil
 from pathlib import Path as _Path
 
 
-def copy_file(src_path: str, dest_path: str, *, symlink: bool = False):
+def copy_file(src_path: str, dest_path: str, *, symlink: bool = False) -> None:
     '''
         Copy a file from the source path to the destination path, with an option to create a symlink.
 

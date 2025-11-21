@@ -59,7 +59,7 @@ def message(*text: str | object,
     return result
     
 
-def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Debugging message, which stands out from all other messages. Each messages has also a unique ID.
     
@@ -86,7 +86,7 @@ def debug(*text: str | object, color: bytes = TextFormat.Color.PURPLE, text_min_
             additional_text_options=text_options,
             file=file)
 
-def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def info(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Message indicating an information.
     
@@ -109,7 +109,7 @@ def info(*text: str | object, text_min_len: list[int] = [], text_options: list[l
             file=file)
 
 
-def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def progress(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Message indicating an action which is still happening.
     
@@ -131,7 +131,7 @@ def progress(*text: str | object, text_min_len: list[int] = [], text_options: li
     )
 
 
-def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def error(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Message indicating an error.
     
@@ -155,7 +155,7 @@ def error(*text: str | object, text_min_len: list[int] = [], text_options: list[
     )
 
 
-def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code: int = 1, file = _sys.stderr):
+def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code: int = 1, file = _sys.stderr) -> None:
     '''
     Message indicating a critical error. The program terminates after showing this message.
     
@@ -180,7 +180,7 @@ def critical_error(*text: str | object, text_min_len: list[int] = [], exit_code:
     _sys.exit(exit_code)
 
 
-def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def warning(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Message indicating a warning.
     
@@ -204,7 +204,7 @@ def warning(*text: str | object, text_min_len: list[int] = [], text_options: lis
     )
 
 
-def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr):
+def success(*text: str | object, text_min_len: list[int] = [], text_options: list[list] = [[]], file = _sys.stderr) -> None:
     '''
     Message indicating a successfully completed action.
     
@@ -278,7 +278,7 @@ def ask_yn(text: str, default_yes: bool = False, file = _sys.stderr) -> bool:
             return False
 
 
-def ask_continue(text: str | None = None, default_yes: bool = False, file = _sys.stderr):
+def ask_continue(text: str | None = None, default_yes: bool = False, file = _sys.stderr) -> None:
     '''
     Prints a question asking the user if they want to continue executing the program:
     a positive answer makes the program continues its normal execution;

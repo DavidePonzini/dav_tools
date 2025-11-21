@@ -12,7 +12,7 @@ class PostgreSQLConnection():
         self._user = user
         self._password = password
 
-    def __enter__(self):
+    def __enter__(self) -> 'PostgreSQLConnection':
         self._connection = _psycopg2.connect(
             database=self._database,
             port=self._port,
@@ -24,23 +24,21 @@ class PostgreSQLConnection():
         self._cursor = self._connection.cursor()
         return self
     
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         self._cursor.close()
         self._connection.close()
 
-    def commit(self):
+    def commit(self) -> None:
         self._connection.commit()
 
-    def cancel(self):
+    def cancel(self) -> None:
         self._connection.cancel()
 
-    def execute(self, query: sql.Composed, data: dict[str, Any] | None = None, commit: bool = True):
-        result = self._cursor.execute(query, data)
+    def execute(self, query: sql.Composed, data: dict[str, Any] | None = None, commit: bool = True) -> None:
+        self._cursor.execute(query, data)
 
         if commit:
             self.commit()
-
-        return result
     
     def fetch_one(self) -> tuple[Any, ...] | None:
         return self._cursor.fetchone()
@@ -48,41 +46,22 @@ class PostgreSQLConnection():
     def fetch_all(self) -> list[tuple[Any, ...]]:
         return self._cursor.fetchall()
     
-    def set_schema(self, schema: str):
-        query = sql.SQL(
-            'SET search_path TO {schema}'
-        ).format(
-            schema=sql.Identifier(schema)
-        )
+    def set_schema(self, schema: str) -> None:
+        query = sql.SQL('SET search_path TO {schema}').format(schema=sql.Identifier(schema))
  
-        self.execute(query, {
-            'schema': schema
-        })
+        self.execute(query, { 'schema': schema })
 
-    def create_schema(self, schema: str):
-        query = sql.SQL(
-            'CREATE SCHEMA IF NOT EXISTS {schema}'
-        ).format(
-            schema=sql.Identifier(schema)
-        )
+    def create_schema(self, schema: str) -> None:
+        query = sql.SQL('CREATE SCHEMA IF NOT EXISTS {schema}').format(schema=sql.Identifier(schema))
  
-        self.execute(query, {
-            'schema': schema
-        })
+        self.execute(query, { 'schema': schema })
 
-
-    def delete_schema(self, schema: str):
-        query = sql.SQL(
-            'DROP SCHEMA IF EXISTS {schema} CASCADE'
-        ).format(
-            schema=sql.Identifier(schema)
-        )
+    def delete_schema(self, schema: str) -> None:
+        query = sql.SQL('DROP SCHEMA IF EXISTS {schema} CASCADE').format(schema=sql.Identifier(schema))
  
-        self.execute(query, {
-            'schema': schema
-        })
+        self.execute(query, { 'schema': schema })
 
-    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []):
+    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []) -> list[tuple[str, Any]] | None:
         '''
         Inserts a row into a specified table within a PostgreSQL database.
 
@@ -129,7 +108,7 @@ class PostgreSQL:
     def connect(self) -> PostgreSQLConnection:
         return PostgreSQLConnection(self._host, self._port, self._database, self._user, self._password)
 
-    def get_query_string(self, query: sql.SQL):
+    def get_query_string(self, query: sql.SQL) -> str:
         with self.connect() as c:
             return query.as_string(c._connection)
         
@@ -143,7 +122,7 @@ class PostgreSQL:
             return c.fetch_all()
 
 
-    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []):
+    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []) -> list[tuple[str, Any]] | None:
         '''
         Inserts a row into a specified table within a PostgreSQL database.
 

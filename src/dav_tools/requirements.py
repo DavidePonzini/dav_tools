@@ -14,7 +14,7 @@ class OS:
     MAC = 'Mac'
 
 
-def require(root = False, os: list[str] = []):
+def require(root = False, os: list[str] = []) -> None:
     '''
     Require the program to statisfy the given requirements before continuing its execution.
 
@@ -27,7 +27,7 @@ def require(root = False, os: list[str] = []):
     if root:
         _require_root()
 
-def _require_root(auto_elevate=True):
+def _require_root(auto_elevate=True) -> None:
     if auto_elevate:
         _elevate.elevate(graphical=False)
 
@@ -38,7 +38,7 @@ def _require_root(auto_elevate=True):
         if _os.geteuid() != 0:
             _messages.critical_error('Program must be run as root')
 
-def _require_os(*os: str):
+def _require_os(*os: str) -> None:
     if _platform.system() not in os:
         _messages.critical_error('OS not supported')
 

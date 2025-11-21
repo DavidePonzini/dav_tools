@@ -23,7 +23,7 @@ def execute(command: str, stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sy
     return exit_status == 0
 
 def get_output(command: str, on_success: _Callable[[bytes], Any] = lambda x: x, on_error: _Callable[[], Any] | None = None,
-               stdin = _sys.stdin, stderr = _sys.stderr):
+               stdin = _sys.stdin, stderr = _sys.stderr) -> Any:
     '''
     Run a command and return its output.
     

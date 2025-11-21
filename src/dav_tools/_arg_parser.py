@@ -33,8 +33,11 @@ class ArgumentParser:
 
         self.__groups = {}
 
+        # Lazy properties
+        self._args = None
 
-    def set_version(self, version: str):
+
+    def set_version(self, version: str) -> None:
         '''
         Add a ``--version`` option, which automatically displays project version.
         
@@ -43,7 +46,7 @@ class ArgumentParser:
 
         self.parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
 
-    def set_description(self, description: str):
+    def set_description(self, description: str) -> None:
         '''
         Set a brief description of the program, to be displayed on top when using the --help flag.
 
@@ -52,7 +55,7 @@ class ArgumentParser:
 
         self.parser.description = description
 
-    def set_developer_info(self, name: str, email: str):
+    def set_developer_info(self, name: str, email: str) -> None:
         '''
         Set information about the developer of the project.
         These informations will be displayed at the bottom of the --help command. 
@@ -70,7 +73,16 @@ class ArgumentParser:
 
         :returns: The arguments
         '''
-        return self.parser.parse_args()
+        if self._args is None:
+            self._args = self.parser.parse_args()
+        return self._args
+    
+    def parse_args(self) -> None:
+        '''
+        Parse command line arguments and store them in the ``args`` property.
+        '''
+
+        _ = self.args    # Accessing the property forces parsing
     
 
     def __group(self, name: str, description: str | None = None) -> argparse._ArgumentGroup:
@@ -112,7 +124,7 @@ class ArgumentParser:
     def add_argument(self,
                      *name_or_flags,
                      group: argparse.ArgumentParser | argparse._ArgumentGroup | argparse._MutuallyExclusiveGroup | str | None = None,
-                     **kwargs):
+                     **kwargs) -> None:
         '''
         Add an argument to the parser.
 
@@ -130,7 +142,7 @@ class ArgumentParser:
 
         group.add_argument(*name_or_flags, **kwargs)
 
-    def add_quiet_mode(self):
+    def add_quiet_mode(self) -> None:
         '''
         Add a ``--quiet`` switch, which can be used in the program to suppress some output.
         Group and description are automatically set.
@@ -138,7 +150,7 @@ class ArgumentParser:
         
         self.add_argument('--quiet', group=self.__group('verbosity'), help='Suppresses all non-critical messages', action=ArgumentAction.STORE_TRUE)
 
-    def add_verbose_mode(self):
+    def add_verbose_mode(self) -> None:
         '''
         Add a ``--verbose`` switch, which can be used in the program to produce more output.
         Group and description are automatically set.
