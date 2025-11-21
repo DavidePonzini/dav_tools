@@ -73,7 +73,7 @@ class ArgumentParser:
         return self.parser.parse_args()
     
 
-    def __group(self, name: str, description: str = None) -> argparse._ArgumentGroup:
+    def __group(self, name: str, description: str | None = None) -> argparse._ArgumentGroup:
         '''
         Return an argument group, or create it if it doesn't exist.
 
@@ -94,7 +94,7 @@ class ArgumentParser:
         self.__groups[name] = group
         return group
 
-    def add_mutually_exclusive_group(self, parent: argparse._ArgumentGroup = None) -> argparse._MutuallyExclusiveGroup:
+    def add_mutually_exclusive_group(self, parent: argparse._ArgumentGroup | argparse.ArgumentParser | None = None) -> argparse._MutuallyExclusiveGroup:
         '''
         Create a mutually exclusive argument group.
         Only one option from this group can be used at a time.
@@ -111,7 +111,7 @@ class ArgumentParser:
 
     def add_argument(self,
                      *name_or_flags,
-                     group: argparse.ArgumentParser | argparse._ArgumentGroup | argparse._MutuallyExclusiveGroup | str = None,
+                     group: argparse.ArgumentParser | argparse._ArgumentGroup | argparse._MutuallyExclusiveGroup | str | None = None,
                      **kwargs):
         '''
         Add an argument to the parser.
@@ -125,6 +125,8 @@ class ArgumentParser:
             group = self.parser
         elif type(group) == str:
             group = self.__group(group)
+
+        assert isinstance(group, (argparse.ArgumentParser, argparse._ArgumentGroup, argparse._MutuallyExclusiveGroup))
 
         group.add_argument(*name_or_flags, **kwargs)
 

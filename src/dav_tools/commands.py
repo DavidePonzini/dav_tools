@@ -3,7 +3,7 @@
 import subprocess as _subprocess
 from shlex import split as _split
 from subprocess import CalledProcessError
-from typing import Callable as _Callable
+from typing import Any, Callable as _Callable
 import sys as _sys
 import platform as _platform
 
@@ -22,7 +22,7 @@ def execute(command: str, stdin = _sys.stdin, stdout = _sys.stdout, stderr = _sy
     exit_status = _subprocess.check_call(_split(command), stdin=stdin, stdout=stdout, stderr=stderr)
     return exit_status == 0
 
-def get_output(command: str, on_success: _Callable[[bytes], any] = lambda x: x, on_error: _Callable[[], any] = None,
+def get_output(command: str, on_success: _Callable[[bytes], Any] = lambda x: x, on_error: _Callable[[], Any] | None = None,
                stdin = _sys.stdin, stderr = _sys.stderr):
     '''
     Run a command and return its output.

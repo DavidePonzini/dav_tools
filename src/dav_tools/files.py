@@ -47,7 +47,7 @@ def delete_file(path: str) -> bool:
 
     exists = file_path.exists()
     if not exists:
-        return
+        return False
 
     if not file_path.is_file():
         raise Exception(f'{file_path} is not a file')

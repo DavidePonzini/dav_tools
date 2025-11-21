@@ -13,7 +13,7 @@ _debug_counter = 0
 
 def message(*text: str | object,
             text_min_len: list[int] = [], default_text_options: list = [], additional_text_options: list[list] = [[]],
-            icon: str = None, icon_options: list = [],
+            icon: str | None = None, icon_options: list = [],
             end: str = '\n', file = _sys.stderr) -> str:
     '''
     Generic and customizable message.
@@ -253,7 +253,7 @@ def ask(question: str, end=': ', secret: bool = False, file = _sys.stderr) -> st
         file=file
     )
 
-def ask_yn(text: str, default_yes=False, file = _sys.stderr) -> bool:
+def ask_yn(text: str, default_yes: bool = False, file = _sys.stderr) -> bool:
     '''
     Prints a question asking the user a Yes/No question.
     Returns the answer as a boolean (Yes = True, No = False).
@@ -278,7 +278,7 @@ def ask_yn(text: str, default_yes=False, file = _sys.stderr) -> bool:
             return False
 
 
-def ask_continue(text: str=None, default_yes=False, file = _sys.stderr):
+def ask_continue(text: str | None = None, default_yes: bool = False, file = _sys.stderr):
     '''
     Prints a question asking the user if they want to continue executing the program:
     a positive answer makes the program continues its normal execution;

@@ -1,5 +1,6 @@
 '''Database interaction'''
 
+from typing import Any
 import psycopg2 as _psycopg2
 from psycopg2 import sql
 
@@ -33,7 +34,7 @@ class PostgreSQLConnection():
     def cancel(self):
         self._connection.cancel()
 
-    def execute(self, query: str, data: dict[str, any] | None = None, commit: bool = True):
+    def execute(self, query: sql.Composed, data: dict[str, Any] | None = None, commit: bool = True):
         result = self._cursor.execute(query, data)
 
         if commit:
@@ -41,10 +42,10 @@ class PostgreSQLConnection():
 
         return result
     
-    def fetch_one(self) -> tuple[any, ...] | None:
+    def fetch_one(self) -> tuple[Any, ...] | None:
         return self._cursor.fetchone()
     
-    def fetch_all(self) -> list[tuple[any, ...]]:
+    def fetch_all(self) -> list[tuple[Any, ...]]:
         return self._cursor.fetchall()
     
     def set_schema(self, schema: str):
@@ -81,7 +82,7 @@ class PostgreSQLConnection():
             'schema': schema
         })
 
-    def insert(self, schema: str, table: str, data: dict[str, any], return_fields: list[str] = []):
+    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []):
         '''
         Inserts a row into a specified table within a PostgreSQL database.
 
@@ -132,17 +133,17 @@ class PostgreSQL:
         with self.connect() as c:
             return query.as_string(c._connection)
         
-    def execute(self, query: str, data: dict[str, any] | None = None, commit: bool = True) -> None:
+    def execute(self, query: sql.Composed, data: dict[str, Any] | None = None, commit: bool = True) -> None:
         with self.connect() as c:
             c.execute(query, data, commit=commit)
 
-    def execute_and_fetch(self, query: str, data: dict[str, any] | None = None) -> list[tuple[any, ...]]:
+    def execute_and_fetch(self, query: sql.Composed, data: dict[str, Any] | None = None) -> list[tuple[Any, ...]]:
         with self.connect() as c:
             c.execute(query, data)
             return c.fetch_all()
 
 
-    def insert(self, schema: str, table: str, data: dict[str, any], return_fields: list[str] = []):
+    def insert(self, schema: str, table: str, data: dict[str, Any], return_fields: list[str] = []):
         '''
         Inserts a row into a specified table within a PostgreSQL database.
 

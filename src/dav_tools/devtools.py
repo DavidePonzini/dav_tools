@@ -22,8 +22,8 @@ def import_from(folder: str, module: str):
     :param module: Name of the module to import.
     '''
     
+    path = _os.path.abspath(folder)
     try:
-        path = _os.path.abspath(folder)
         _sys.path.insert(1, path)
 
         _importlib.import_module(module)
