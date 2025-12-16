@@ -14,7 +14,7 @@ _debug_counter = 0
 def message(*text: str | object,
             text_min_len: list[int] = [], default_text_options: list = [], additional_text_options: list[list] = [[]],
             icon: str | None = None, icon_options: list = [],
-            end: str = '\n', file = _sys.stderr) -> str:
+            sep: str = ' ', end: str = '\n', file = _sys.stderr) -> str:
     '''
     Generic and customizable message.
 
@@ -41,7 +41,7 @@ def message(*text: str | object,
     for i in range(len(text)):
         line_text = str(text[i])
         line_options = (default_text_options + additional_text_options[i]) if i < len(additional_text_options) else default_text_options
-        line_end = ' ' if i < len(text) - 1 else ''
+        line_end = sep if i < len(text) - 1 else ''
 
         result += str(FormattedText(line_text, *line_options))
         result += line_end
