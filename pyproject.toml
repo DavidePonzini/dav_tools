@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dav_tools"
-version = "0.4.21"
+version = "0.4.22"
 authors = [
   { name="Davide Ponzini", email="davide.ponzini95@gmail.com" },
 ]
